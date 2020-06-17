@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: rsc-distribution
+  cloud:
+    stream:
+      # Binding 配置项，对应 BindingProperties Map
+      bindings:
+        customer-new-order-input:
+          destination: customer-new-order # 目的地。这里使用 RocketMQ Topic
+          content-type: application/json # 内容格式。这里使用 JSON
+          group: distribution-customer-new-order-consumer-group
+        customer-old-order-input:
+          destination: customer-old-order # 目的地。这里使用 RocketMQ Topic
+          content-type: application/json # 内容格式。这里使用 JSON
+          group: distribution-customer-old-order-consumer-group
+      # Spring Cloud Stream RocketMQ 配置项
+      rocketmq:
+        # RocketMQ 自定义 Binding 配置项，对应 RocketMQBindingProperties Map
+        bindings:
+          customer-new-order-input:
+            consumer:
+              enabled: true # 是否开启消费，默认为 true
+              broadcasting: false # 是否使用广播消费，默认为 false 使用集群消费
+          customer-old-order-input:
+            consumer:
+              enabled: true # 是否开启消费，默认为 true
+              broadcasting: false # 是否使用广播消费，默认为 false 使用集群消费
+dubbo:
+  scan:
+    base-packages: org.warren.sca.rsc.distribution.serviceImpl
+  cloud:
+    subscribed-services: rsc-customer-info,rsc-order,rsc-postman-info
+
+# Seata 配置项，对应 SeataProperties 类
+seata:
+  application-id: ${spring.application.name} # Seata 应用编号，默认为 ${spring.application.name}
+  tx-service-group: ${spring.application.name}-group # Seata 事务组编号，用于 TC 集群名
+  # Seata 服务配置项，对应 ServiceProperties 类
+  service:
+    # 虚拟组和分组的映射
+    vgroup-mapping:
+      rsc-distribution-group: default
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

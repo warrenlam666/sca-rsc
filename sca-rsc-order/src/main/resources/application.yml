@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: rsc-order
+    stream:
+      # Binding 配置项，对应 BindingProperties Map
+      bindings:
+        customer-new-order-output:
+          destination: customer-new-order # 目的地。这里使用 RocketMQ Topic
+          content-type: application/json # 内容格式。这里使用 JSON
+      # Spring Cloud Stream RocketMQ 配置项
+      rocketmq:
+        bindings:
+          customer-new-order-output:
+            # RocketMQ Producer 配置项，对应 RocketMQProducerProperties 类
+            producer:
+              group: test # 生产者分组
+              sync: true # 是否同步发送消息，默认为 false 异步。
+dubbo:
+  scan:
+    base-packages: org.warren.sca.rsc.order.serviceImpl
+  cloud:
+    subscribed-services: []
+
+# Seata 配置项，对应 SeataProperties 类
+seata:
+  application-id: ${spring.application.name} # Seata 应用编号，默认为 ${spring.application.name}
+  tx-service-group: ${spring.application.name}-group # Seata 事务组编号，用于 TC 集群名
+  # Seata 服务配置项，对应 ServiceProperties 类
+  service:
+    # 虚拟组和分组的映射
+    vgroup-mapping:
+      rsc-order-group: default

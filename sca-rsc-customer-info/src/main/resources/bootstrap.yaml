@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: nacos地址
+        namespace: nacos命名空间
+        file-extension: yaml
+        extension-configs:
+          - data-id: config-dubbo.yaml
+            refresh: true
+          - data-id: config-mysql.yaml
+            refresh: true
+          - data-id: config-nacos-discovery.yaml
+            refresh: true
+          - data-id: config-redis.yaml
+            refresh: true
+          - data-id: config-seata.yaml
+            refresh: true
+          - data-id: config-rocketmq.yaml
+            refresh: true

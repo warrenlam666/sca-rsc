@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: rsc-customer-info
+
+dubbo:
+  scan:
+    base-packages: org.warren.sca.rsc.customerinfo.serviceImpl
+  cloud:
+    subscribed-services: []
